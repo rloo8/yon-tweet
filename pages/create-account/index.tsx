@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
@@ -5,16 +6,18 @@ interface CreateAccountForm {
   name: string;
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
 export default function CreateAccount() {
   const router = useRouter();
 
-  const { register, handleSubmit, formState, watch } =
-    useForm<CreateAccountForm>({
-      mode: "onChange",
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateAccountForm>({
+    mode: "onChange",
+  });
   const onValid = async (data: CreateAccountForm) => {
     const request = await fetch("/api/users/create-account", {
       method: "POST",
@@ -31,8 +34,6 @@ export default function CreateAccount() {
       router.push("/log-in");
     }
   };
-
-  const { errors } = formState;
 
   return (
     <div>
@@ -75,7 +76,7 @@ export default function CreateAccount() {
         </div>
         <input type="submit" value="CREATE ACCOUNT" />
       </form>
-      <div>LOG-IN 바로가기</div>
+      <Link href="/log-in">LOG-IN 바로가기</Link>
     </div>
   );
 }

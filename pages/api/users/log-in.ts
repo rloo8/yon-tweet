@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import db from "../../../lib/server/db";
 import withHandler from "../../../lib/server/withHandler";
 import { withApiSession } from "../../../lib/server/withApiSession";
+import db from "../../../lib/server/db";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const user = await db.user.findUnique({
@@ -10,17 +10,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     },
   });
 
-  if (user) {
-    return res.status(200).end();
+  if (!user || req.body.password !== user.password) {
+    return res.status(404).end();
   }
-  await db.user.create({
-    data: {
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-    },
-  });
-  return res.status(201).end();
+
+  req.session.user = {
+    id: user.id,
+  };
+  await req.session.save();
+  return res.status(200).end();
 }
 
 export default withApiSession(withHandler({ methods: ["POST"], fn: handler }));
