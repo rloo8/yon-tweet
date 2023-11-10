@@ -1,13 +1,30 @@
+import { Tweet } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 import useSWR from "swr";
 
+interface TweetWithUser extends Tweet {
+  user: { name: string };
+}
+
+interface TweetsResponse {
+  ok: boolean;
+  tweets: TweetWithUser[];
+}
+
 export default function Home() {
-  const { data } = useSWR("/api/users/me");
+  const { data } = useSWR<TweetsResponse>("/api/tweets");
 
   return (
     <div>
-      <h1>Hello {data?.name}</h1>
+      <ul>
+        {data?.tweets?.map((tweet) => (
+          <li key={tweet.id}>
+            <span>{tweet.text}</span>
+            <span>{tweet.user.name}</span>
+          </li>
+        ))}
+      </ul>
       <Link href="/tweet/upload">
         <svg
           className="h-6 w-6"
