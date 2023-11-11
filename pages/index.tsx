@@ -15,13 +15,14 @@ interface TweetsResponse {
 
 export default function Home() {
   const { data } = useSWR<TweetsResponse>("/api/tweets");
+  const reversedTweets = data?.tweets ? [...data.tweets].reverse() : [];
 
   return (
     <>
       <Header />
       <div className="max-w-screen-md mx-auto p-4">
         <ul className="space-y-4">
-          {data?.tweets?.map((tweet) => (
+          {reversedTweets.map((tweet) => (
             <Link href={`/tweets/${tweet.id}`} key={tweet.id}>
               <li className="p-4 border border-gray-300 rounded-md flex justify-between items-center hover:bg-gray-100 transition-all duration-300 cursor-pointer">
                 <div className="flex items-center gap-2">
