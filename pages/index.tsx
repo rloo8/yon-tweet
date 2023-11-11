@@ -19,13 +19,15 @@ export default function Home() {
     <div>
       <ul>
         {data?.tweets?.map((tweet) => (
-          <li key={tweet.id}>
-            <span>{tweet.text}</span>
-            <span>{tweet.user.name}</span>
-          </li>
+          <Link href={`/tweets/${tweet.id}`} key={tweet.id}>
+            <li>
+              <span>{tweet.text}</span>
+              <span>{tweet.user.name}</span>
+            </li>
+          </Link>
         ))}
       </ul>
-      <Link href="/tweet/upload">
+      <Link href="/tweets/upload">
         <svg
           className="h-6 w-6"
           xmlns="http://www.w3.org/2000/svg"

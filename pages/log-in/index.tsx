@@ -27,7 +27,7 @@ export default function Login() {
     if (request.status === 200) {
       router.push("/");
     } else {
-      alert("계정이 존재하지 않습니다!");
+      alert("아이디 또는 비밀번호를 확인해주세요.");
     }
   };
 
