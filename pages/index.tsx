@@ -2,6 +2,7 @@ import { Tweet } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 import useSWR from "swr";
+import Header from "../components/Header";
 
 interface TweetWithUser extends Tweet {
   user: { name: string };
@@ -16,34 +17,46 @@ export default function Home() {
   const { data } = useSWR<TweetsResponse>("/api/tweets");
 
   return (
-    <div>
-      <ul>
-        {data?.tweets?.map((tweet) => (
-          <Link href={`/tweets/${tweet.id}`} key={tweet.id}>
-            <li>
-              <span>{tweet.text}</span>
-              <span>{tweet.user.name}</span>
-            </li>
-          </Link>
-        ))}
-      </ul>
-      <Link href="/tweets/upload">
-        <svg
-          className="h-6 w-6"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-          />
-        </svg>
-      </Link>
-    </div>
+    <>
+      <Header />
+      <div className="max-w-screen-md mx-auto p-4">
+        <ul className="space-y-4">
+          {data?.tweets?.map((tweet) => (
+            <Link href={`/tweets/${tweet.id}`} key={tweet.id}>
+              <li className="p-4 border border-gray-300 rounded-md flex justify-between items-center hover:bg-gray-100 transition-all duration-300 cursor-pointer">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-semibold">{tweet.text}</span>
+                  <span className="text-gray-500 text-sm">
+                    @{tweet.user.name}
+                  </span>
+                </div>
+                <svg
+                  width="24px"
+                  height="24px"
+                  strokeWidth="1.5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  color="#000000"
+                >
+                  <path
+                    d="M9 6L15 12L9 18"
+                    stroke="#000000"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  ></path>
+                </svg>
+              </li>
+            </Link>
+          ))}
+        </ul>
+        <Link href="/tweets/upload">
+          <a className="block text-center font-bold mt-4 p-4 bg-yellow-300 rounded-md hover:bg-black hover:text-white transition-all duration-300">
+            UPLOAD TWEET
+          </a>
+        </Link>
+      </div>
+    </>
   );
 }
